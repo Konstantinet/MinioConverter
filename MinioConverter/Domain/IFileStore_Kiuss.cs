@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
-
-using Dt.Kpsirs.Common.File.Dto;
+using Minio;
+//using Dt.Kiuss.Core.Model.File;
 //using Microsoft.AspNetCore.Http;
 
-namespace Dt.Kpsirs.Common.File.Files;
+namespace Dt.Kiuss.Supervisor.Domain.Utils.File
 
 /// <summary>
 /// Провайдер хранилища файлов
@@ -15,30 +15,28 @@ public interface IFileStore
     /// Получение содержимого файла
     /// </summary>
     /// <param name="fileId">Идентификатор файла</param>
-    /// <param name="drillingProgramId">Идентификатор ПБ</param>
+    /// <param name="drillingProjectId">Идентификатор ПБ</param>
     /// <param name="fileName">Наименование файла</param>
-    /// <param name="fileType">Тип Файла</param>
     /// <returns>Содержимое файла</returns>
-    Task<FileContentDto> LoadFile(Guid fileId, Guid drillingProgramId, string fileName, FileType fileType);
+    Task<FileContentDto> LoadFile(Guid fileId, Guid drillingProjectId, string fileName);
+
 
 
     /// <summary>
     /// Создание файла
     /// </summary>
     /// <param name="fileId">Идентификатор файла</param>
-    /// <param name="drillingProgramId">Идентификатор ПБ</param>
+    /// <param name="drillingProjectId">Идентификатор ПБ</param>
     /// <param name="fileContent">Содержимое файла</param>
     /// <param name="fileName">Наименование файла</param>
-    /// <param name="fileType">Тип Файла</param>
-    /// <returns>Task</returns>
-    Task CreateFile(Guid fileId, Guid drillingProgramId, byte[] fileContent, string fileName, FileType fileType);
+    /// <returns>Результат асинхронной операции</returns>
+    Task CreateFile(Guid fileId, Guid drillingProjectId, byte[] fileContent, string fileName);
 
     /// <summary>
     /// Удаление файла
     /// </summary>
     /// <param name="fileId">Идентификатор файла</param>
-    /// <param name="drillingProgramId">Идентификатор ПБ</param>
+    /// <param name="drillingProjectId">Идентификатор ПБ</param>
     /// <param name="fileName">Наименование файла</param>
-    /// <param name="fileType">Тип Файла</param>
-    void DeleteFile(Guid fileId, Guid drillingProgramId, string fileName, FileType fileType);
+    void DeleteFile(Guid fileId, Guid drillingProjectId, string fileName);
 }

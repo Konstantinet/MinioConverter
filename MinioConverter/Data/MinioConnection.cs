@@ -1,32 +1,38 @@
-﻿using Dt.Kpsirs.Common.File.Dto;
-using Dt.Kpsirs.Common.File.Files;
-using Minio;
+﻿using Minio;
 using Minio.DataModel.Args;
-using Minio.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Dt.Kpsirs.Common.File.Files
+
+namespace MinioConverter.Domain.Data
 {
-    internal class MinioFileStoreKpsirs : IFileStore
-{
-        static IMinioClient minio;
-        public MinioFileStoreKpsirs(string endpoint, string accessKey, string secretKey)
-        {
-            minio = new MinioClient().WithEndpoint(endpoint)
-                                        .WithCredentials(accessKey, secretKey)
-                                        .Build();
-        }
-        public async Task CreateFile(Guid fileId, Guid drillingProgramId, byte[] fileContent, string fileName, FileType fileType)
+    internal class MinioConnection:IS3StoreConnection
     {
-            var bucketName = $"kpsirs";
-            var objectName = $"{drillingProgramId}\\{fileType}\\{fileId}.{fileName.Split('.').Last()}";
-            var filePath = $"F:\\dp_emulation\\kiuss\\{drillingProgramId}\\{fileType}\\{fileId}.{fileName.Split('.').Last()}";
-            var contentType = "application/octet-stream";
+        static IMinioClient minio;
+        public MinioConnection()
+        {
 
+        }
+        public MinioConnection(string endpoint, string accessKey, string secretKey)
+        {
+            if (minio is null)
+            {
+                minio = new MinioClient().WithEndpoint(endpoint)
+                                             .WithCredentials(accessKey, secretKey)
+                                             .Build();
+            }
+        }
+        public MinioClient Connect(string endpoint, string accessKey, string secretKey)
+        {
+            if (minio is null)
+            {
+                minio = new MinioClient().WithEndpoint(endpoint)
+                                             .WithCredentials(accessKey, secretKey)
+                                             .Build();
+            }
+            return (MinioClient)minio;
+        }
+        public async Task CreateFile(string bucketName, string objectName, string filePath, byte[] fileContent)
+        {
+            var contentType = "application/octet-stream";
             try
             {
                 // Make a bucket on the server, if not already present.
@@ -44,21 +50,18 @@ namespace Dt.Kpsirs.Common.File.Files
                     .WithBucket(bucketName)
                     .WithObject(objectName)
                     .WithObjectSize(fileContent.Length)
-                    .WithStreamData(new MemoryStream(fileContent))
+                .WithStreamData(new MemoryStream(fileContent))
                     .WithContentType(contentType);
                 await minio.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
-                Console.WriteLine("Successfully uploaded " + objectName);
-            }
-            catch (MinioException e)
-            {
-                Console.WriteLine("File Upload Error: {0}", e.Message);
-            }
-        }
 
-    public async void DeleteFile(Guid fileId, Guid drillingProgramId, string fileName, FileType fileType)
-    {
-            var bucketName = $"kpsirs";
-            var objectName = $"{drillingProgramId}\\{fileType}\\{fileId}.{fileName.Split('.').Last()}";
+            }
+            catch(Exception ex)
+            {
+
+            }
+            }
+        public async void DeleteFile(string bucketName,string objectName)
+        {
             try
             {
                 var beArgs = new BucketExistsArgs()
@@ -72,21 +75,15 @@ namespace Dt.Kpsirs.Common.File.Files
                 }
 
                 var removeObjectArgs = new RemoveObjectArgs()
-                    .WithBucket(bucketName)
+                .WithBucket(bucketName)
                     .WithObject(objectName);
                 await minio.RemoveObjectAsync(removeObjectArgs).ConfigureAwait(false);
                 Console.WriteLine("Successfully removed " + objectName);
             }
-            catch (MinioException e)
-            {
-                Console.WriteLine("File Upload Error: {0}", e.Message);
-            }
+            catch (Exception ex) { }
         }
-
-    public async Task<FileContentDto> LoadFile(Guid fileId, Guid drillingProgramId, string fileName, FileType fileType)
-    {
-            var bucketName = $"kpsirs";
-            var objectName = $"{drillingProgramId}\\{fileType}\\{fileId}.{fileName.Split('.').Last()}";
+        public async Task<MemoryStream?> LoadFile(string bucketName,string objectName)
+        {
             try
             {
                 var beArgs = new BucketExistsArgs()
@@ -108,17 +105,11 @@ namespace Dt.Kpsirs.Common.File.Files
                      });
 
                 var stat = await minio.GetObjectAsync(args).ConfigureAwait(false);
-                Console.WriteLine("Successfully removed " + objectName);
-                string result = System.Text.Encoding.Default.GetString(inputStream.ToArray());
-                Console.WriteLine(result);
 
-                return new FileContentDto(fileName, inputStream.ToArray());
+
+                return inputStream;
             }
-            catch (MinioException e)
-            {
-                Console.WriteLine("File Upload Error: {0}", e.Message);
-                return null;
-            }
+            catch(Exception ex) { return null; }
         }
-}
+    }
 }

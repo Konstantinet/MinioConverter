@@ -1,5 +1,8 @@
 ﻿using Dt.Kiuss.Supervisor.Domain.Utils.File;
-using MinioConverter.CLI;
+using Microsoft.Extensions.Configuration;
+using MinioConverter.Domain.Data;
+using System.IO;
+using System.Net;
 
 namespace MinioConverter
 {
@@ -7,13 +10,18 @@ namespace MinioConverter
     {
         public static void Main(string[] args)
         {
-            //var commandHandler = new CommandHandler();
-            //commandHandler.Handle(args).Wait();
+            /*var build = new ConfigurationBuilder();
+            build.SetBasePath(Directory.GetCurrentDirectory());  
+            build.AddJsonFile(CONFIG_FILE, true, true);
+            Configs = build.Build();
 
-            var store = new MinioFileStoreKiuss("localhost:9000", "ROOTUSER", "CHANGEME123");
-            var content = File.ReadAllBytes("F:\\dp_emulation\\4ced9581-a08b-433b-b1a6-c99e1e393684\\2e455c4b-cfc7-4b68-be8e-9a9013e91644.txt");
-            store.CreateFile(new Guid("2e455c4b-cfc7-4b68-be8e-9a9013e91644"), new Guid("4ced9581-a08b-433b-b1a6-c99e1e393684"),content,"2e455c4b-cfc7-4b68-be8e-9a9013e91644.txt");
-            //store.DeleteFile(new Guid("2e455c4b-cfc7-4b68-be8e-9a9013e91644"), new Guid("4ced9581-a08b-433b-b1a6-c99e1e393684"),"2e455c4b-cfc7-4b68-be8e-9a9013e91644.txt");
+            IConfiguration config = builder.Build();*/
+            var endPoint = "";
+            var accessKey = "";
+            var secretKey = "";
+            var connection = new MinioConnection(endPoint,accessKey,secretKey);
+
+
         }
     }
 }
