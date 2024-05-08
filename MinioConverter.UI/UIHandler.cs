@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace MinioConverter.UI
 {
     interface UIHandler
     {
-        public Task Handle(params string[] args);
+        public Task<int> Handle(IConfiguration config, params string[] args);
     }
 }

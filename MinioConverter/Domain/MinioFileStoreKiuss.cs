@@ -2,11 +2,11 @@
 using Dt.Kpsirs.Common.File.Dto;
 using Minio.Exceptions;
 using MinioConverter.Domain.Data;
-
+using System.ComponentModel.Design;
 
 namespace MinioConverter.Domain.Domain;
 
-internal class MinioFileStoreKiuss : MinioFileStore,IFileStore
+public class MinioFileStoreKiuss : MinioFileStore,IFileStore
 {
     static IS3StoreConnection connection;
     string bucketName = "kiuss";
@@ -18,7 +18,12 @@ internal class MinioFileStoreKiuss : MinioFileStore,IFileStore
     }
     public MinioFileStoreKiuss(string endpoint, string accessKey, string secretKey)
     {
-        connection.Connect(endpoint, accessKey, secretKey);
+        if (connection == null) {
+            connection = new MinioConnection(endpoint, accessKey, secretKey);
+        }
+        else{
+            connection.Connect(endpoint, accessKey, secretKey);
+        }
     }
 
     public async Task CreateFile(Guid fileId, Guid drillingProjectId, byte[] fileContent, string fileName)

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Dt.Kpsirs.Common.File.Dto;
 using Minio;
 //using Dt.Kiuss.Core.Model.File;
 //using Microsoft.AspNetCore.Http;
 
-namespace Dt.Kiuss.Supervisor.Domain.Utils.File
+namespace Dt.Kiuss.Supervisor.Domain.Utils.File;
 
 /// <summary>
 /// Провайдер хранилища файлов

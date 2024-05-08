@@ -4,7 +4,7 @@ using Minio.DataModel.Args;
 
 namespace MinioConverter.Domain.Data
 {
-    internal class MinioConnection:IS3StoreConnection
+    public class MinioConnection:IS3StoreConnection
     {
         static IMinioClient minio;
         public MinioConnection()

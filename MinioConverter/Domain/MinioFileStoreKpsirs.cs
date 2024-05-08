@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MinioConverter.Domain.Domain
 {
-    internal class MinioFileStoreKpsirs : IFileStore
+    public class MinioFileStoreKpsirs : IFileStore
     {
         static IS3StoreConnection connection;
         string bucketName = "kpsirs";

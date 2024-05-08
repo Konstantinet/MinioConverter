@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MinioConverter.UI": {
+      "commandName": "Project",
+      "commandLineArgs": "send -p kiuss -r F:\\dp_emulation\\4ced9581-a08b-433b-b1a6-c99e1e393684"
+    }
+  }
+}

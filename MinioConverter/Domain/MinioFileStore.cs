@@ -1,8 +1,11 @@
 ﻿
 
+using Dt.Kpsirs.Common.File;
+using Dt.Kpsirs.Common.File.Dto;
+
 namespace MinioConverter.Domain.Domain
 {
-    public class MinioFileStore 
+    public abstract class MinioFileStore 
     {
         public Task CreateFile(Guid fileId, Guid drillingProjectId, byte[] fileContent, string fileName)
         {
